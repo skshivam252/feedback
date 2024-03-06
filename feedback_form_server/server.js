@@ -1,14 +1,14 @@
 const express = require('express');
-const cors=require('cors');
 const bodyParser=require('body-parser');
 const app = express();
 app.use(bodyParser.json({extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+
+app.use(express.static("build"))
 
 const { createObjectCsvWriter } = require('csv-writer');
 const fs = require('fs');
-
+const PORT = process.env.PORT || 5000;
 
 
 app.get("/",(req,res)=>{
@@ -18,7 +18,7 @@ app.get("/",(req,res)=>{
 const addFeedback = (feedback) => {
   return new Promise((resolve, reject) => {
     console.log(feedback);
-      const csvFilePath = './feedback.csv'; // Replace 'FILEPATH' with your actual file path
+      const csvFilePath = './feedback.csv'; 
       const csvWriter = createObjectCsvWriter({
           path: csvFilePath,
           header: [
@@ -49,7 +49,7 @@ const addFeedback = (feedback) => {
 
 
 
-app.post("/add",(req,res)=>{
+app.post("/api/add",(req,res)=>{
   addFeedback(req.body).
   then(()=>{
     res.send("Added SucceessFully")
@@ -60,4 +60,4 @@ app.post("/add",(req,res)=>{
   
 })
 
-app.listen(5000, () => console.log('Server is listening on port 5000'));
+app.listen(PORT, '0.0.0.0',() => console.log('Server is listening on port 5000'));
